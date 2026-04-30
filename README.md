@@ -20,13 +20,20 @@ images, metadata, source spans, and recoverable diagnostics.
 The AST can then be exported to JSON for machines, Markdown for humans, or
 deterministic RTF for roundtrip workflows.
 
-`rtfstruct` was written by Lee Powell, who previously built the production C++
-RTF parser and writer used in Scrivener for Windows and Linux. That
-infrastructure was pressure-tested for more than a decade across hundreds of
-thousands of users and long-form writing projects.
+`rtfstruct` was written by Lee Powell, who built the production C++ RTF parser
+and writer used in Scrivener for Windows and Linux—pressure-tested for more than
+a decade across hundreds of thousands of writers and long-form projects. That
+engineering was later sold as a white-label engagement to Literature & Latte.
 
-This project applies that same production-informed discipline to AI document
-infrastructure.
+Today he advises executives and boards on structural AI readiness through
+[Lumen & Lever](https://lumenandlever.com): establishing control over AI already
+in use, clarifying exposure, and deciding whether an organisation is structurally
+ready to scale before more capital goes out the door—the same discipline he
+applied as architect of Scrivener and Scapple and as an enterprise architect at
+Commonwealth Bank and Deutsche Bank.
+
+`rtfstruct` applies that production-informed mindset to document ingestion for AI
+pipelines, not only to board-level AI architecture.
 
 Most AI document pipelines fail before retrieval begins. Structure is flattened.
 Tables lose meaning. Lists collapse. Comments and notes disappear. Source

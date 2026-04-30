@@ -1,0 +1,53 @@
+{
+  "annotations": {},
+  "blocks": [
+    {
+      "children": [
+        {
+          "style": {},
+          "text": "Hello ",
+          "type": "text"
+        },
+        {
+          "style": {
+            "bold": true
+          },
+          "text": "world",
+          "type": "text"
+        }
+      ],
+      "style": {},
+      "type": "paragraph"
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "style": {},
+              "text": "Example",
+              "type": "text"
+            }
+          ],
+          "instruction": "HYPERLINK \"https://example.test\"",
+          "target": "https://example.test",
+          "type": "link"
+        }
+      ],
+      "style": {},
+      "type": "paragraph"
+    }
+  ],
+  "diagnostics": [],
+  "footnotes": {},
+  "images": {},
+  "metadata": {
+    "author": "Lee",
+    "title": "Golden Example"
+  },
+  "styles": {
+    "paragraph_styles": {},
+    "text_styles": {}
+  },
+  "type": "document"
+}

@@ -1,0 +1,6 @@
+rtfstruct
+Copyright 2026 Lee Powell
+This product includes software developed by Lee Powell.
+rtfstruct is a standalone Python RTF parser and writer for structured document processing. It converts RTF into a document AST for structured export, including JSON, Markdown, and RTF.
+The implementation is informed by Lee Powell’s prior experience building production C++ RTF parsing and writing infrastructure, including RTF infrastructure authored for Scrivener for Windows and refined through approximately 15 years of real-world use.
+Licensed under the Apache License, Version 2.0.

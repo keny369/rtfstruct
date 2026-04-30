@@ -1,0 +1,1008 @@
+<!--
+SPDX-License-Identifier: Apache-2.0
+Copyright 2026 Lee Powell
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="rtfstruct documentation: parse RTF into an AI-ready AST, export JSON and Markdown, and write deterministic RTF.">
+  <title>rtfstruct Documentation</title>
+  <style>
+    :root {
+      --bg: #f4efe7;
+      --bg-soft: #fbf7f0;
+      --panel: rgba(255, 252, 246, 0.94);
+      --panel-strong: #fffdf8;
+      --ink: #25211c;
+      --muted: #665f55;
+      --muted-2: #81776a;
+      --accent: #8e4f2f;
+      --accent-2: #315f73;
+      --accent-3: #5d6f3a;
+      --line: rgba(67, 53, 38, 0.14);
+      --shadow: 0 24px 72px rgba(70, 52, 32, 0.15);
+      --radius: 26px;
+      --sans: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      --serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at 8% 8%, rgba(142, 79, 47, 0.18), transparent 24%),
+        radial-gradient(circle at 92% 14%, rgba(49, 95, 115, 0.16), transparent 24%),
+        radial-gradient(circle at 78% 86%, rgba(93, 111, 58, 0.12), transparent 25%),
+        linear-gradient(180deg, #faf5ed 0%, var(--bg) 48%, #ebe2d4 100%);
+    }
+
+    a {
+      color: var(--accent-2);
+    }
+
+    .layout {
+      width: min(1500px, calc(100vw - 32px));
+      margin: 24px auto 56px;
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 24px;
+      padding: 24px;
+      border-radius: var(--radius);
+      background: rgba(38, 31, 24, 0.93);
+      color: #fff8ef;
+      box-shadow: var(--shadow);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(18px);
+      max-height: calc(100vh - 48px);
+      overflow: auto;
+    }
+
+    .brand {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.76rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #dfc5ad;
+    }
+
+    h1, h2, h3 {
+      font-family: var(--serif);
+      line-height: 1.02;
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      letter-spacing: -0.04em;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 3.2vw, 3.15rem);
+      letter-spacing: -0.035em;
+    }
+
+    h3 {
+      font-size: 1.45rem;
+    }
+
+    .sidebar p {
+      margin: 0;
+      color: #e7d9ca;
+      line-height: 1.55;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .nav a {
+      color: inherit;
+      text-decoration: none;
+      padding: 11px 13px;
+      border-radius: 15px;
+      border: 1px solid rgba(255, 247, 236, 0.11);
+      background: rgba(255, 255, 255, 0.045);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.065em;
+      text-transform: uppercase;
+      transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+    }
+
+    .nav a:hover {
+      transform: translateX(4px);
+      background: rgba(255, 255, 255, 0.09);
+      border-color: rgba(255, 247, 236, 0.24);
+    }
+
+    main {
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero,
+    .card,
+    .mini-card,
+    .diagram-card {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      border-radius: calc(var(--radius) + 4px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: 36px;
+      display: grid;
+      gap: 24px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -90px;
+      bottom: -120px;
+      width: 340px;
+      height: 340px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(142, 79, 47, 0.22), transparent 72%);
+      pointer-events: none;
+    }
+
+    .hero p,
+    .lede,
+    .card p,
+    .card li,
+    .mini-card p,
+    .caption {
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    .hero p {
+      max-width: 78ch;
+      font-size: 1.08rem;
+      margin: 0;
+    }
+
+    .hero-actions,
+    .stats,
+    .grid-2,
+    .grid-3,
+    .api-grid,
+    .pipeline-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .hero-actions {
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    }
+
+    .stats {
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .api-grid {
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    }
+
+    .pipeline-grid {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .action,
+    .stat,
+    .mini-card {
+      padding: 18px 20px;
+      border-radius: 20px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(67, 53, 38, 0.1);
+    }
+
+    .action {
+      text-decoration: none;
+      color: inherit;
+      transition: transform 140ms ease, border-color 140ms ease, box-shadow 140ms ease;
+    }
+
+    .action:hover {
+      transform: translateY(-3px);
+      border-color: rgba(49, 95, 115, 0.28);
+      box-shadow: 0 18px 36px rgba(70, 52, 32, 0.1);
+    }
+
+    .action strong,
+    .stat strong,
+    .mini-card strong,
+    .label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.085em;
+      text-transform: uppercase;
+    }
+
+    .stat span {
+      display: block;
+      font-family: var(--serif);
+      font-size: 2rem;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .card {
+      padding: 30px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .card-header {
+      display: grid;
+      gap: 10px;
+      max-width: 86ch;
+    }
+
+    .card-header p,
+    .mini-card p {
+      margin: 0;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: rgba(49, 95, 115, 0.09);
+      border: 1px solid rgba(49, 95, 115, 0.13);
+      color: #254d5e;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+    }
+
+    pre {
+      margin: 0;
+      padding: 18px;
+      overflow: auto;
+      border-radius: 18px;
+      background: #211a16;
+      color: #f9efe4;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025);
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 0.92rem;
+    }
+
+    p code,
+    li code,
+    td code {
+      color: #713f27;
+      background: rgba(142, 79, 47, 0.08);
+      padding: 0.12em 0.34em;
+      border-radius: 0.45em;
+    }
+
+    .diagram-card {
+      padding: 20px;
+      display: grid;
+      gap: 12px;
+      background: rgba(255, 253, 248, 0.97);
+    }
+
+    .diagram-card h3 {
+      font-size: 1.2rem;
+    }
+
+    .mermaid {
+      padding: 16px;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #fffdf9 0%, #f8f1e8 100%);
+      border: 1px solid rgba(67, 53, 38, 0.1);
+      overflow: auto;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 18px;
+      background: var(--panel-strong);
+      border: 1px solid var(--line);
+    }
+
+    th,
+    td {
+      text-align: left;
+      vertical-align: top;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(67, 53, 38, 0.1);
+    }
+
+    th {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      background: rgba(142, 79, 47, 0.06);
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .callout {
+      padding: 18px 20px;
+      border-left: 4px solid var(--accent-2);
+      border-radius: 18px;
+      background: rgba(49, 95, 115, 0.08);
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .footer-note {
+      text-align: center;
+      color: var(--muted-2);
+      font-size: 0.92rem;
+      padding: 16px;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        max-height: none;
+      }
+
+      .nav {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="eyebrow">RTF to AST Infrastructure</div>
+        <h1>rtfstruct</h1>
+        <p>A Python library for turning RTF into structured, AI-ready document data.</p>
+      </div>
+      <nav class="nav" aria-label="Documentation navigation">
+        <a href="#overview">Overview</a>
+        <a href="#quick-start">Quick Start</a>
+        <a href="#flows">System Flows</a>
+        <a href="#parser">Parser Internals</a>
+        <a href="#ast">AST Model</a>
+        <a href="#conversion">Conversion</a>
+        <a href="#api">API Reference</a>
+        <a href="#cli">CLI</a>
+        <a href="#testing">Testing</a>
+        <a href="#release">Release</a>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="hero" id="overview">
+        <div class="eyebrow">Python 3.11+ · Apache-2.0 · Pre-alpha</div>
+        <h2>Read RTF as structure, not just text.</h2>
+        <p>
+          `rtfstruct` parses Rich Text Format into a neutral document AST that preserves
+          paragraphs, inline styles, links, fields, notes, annotations, lists, tables,
+          images, metadata, source spans, and recoverable diagnostics. The AST can then
+          be exported to JSON for machines, Markdown for humans, or deterministic RTF for
+          roundtrip workflows.
+        </p>
+        <div class="hero-actions">
+          <a class="action" href="#quick-start">
+            <strong>Install</strong>
+            <code>python -m pip install -e ".[dev,docs]"</code>
+          </a>
+          <a class="action" href="#conversion">
+            <strong>Convert</strong>
+            <code>rtfstruct input.rtf --to json</code>
+          </a>
+          <a class="action" href="#flows">
+            <strong>Understand</strong>
+            Parser, AST, exporter, and writer diagrams.
+          </a>
+        </div>
+        <div class="stats">
+          <div class="stat"><strong>Validation</strong><span>192</span>passing tests</div>
+          <div class="stat"><strong>Fixture Corpus</strong><span>13</span>reference RTF files</div>
+          <div class="stat"><strong>Outputs</strong><span>3</span>JSON, Markdown, RTF</div>
+          <div class="stat"><strong>Adapters</strong><span>3</span>MarkItDown, Docling, Unstructured shapes</div>
+        </div>
+      </section>
+
+      <section class="card" id="quick-start">
+        <div class="card-header">
+          <div class="eyebrow">Quick Start</div>
+          <h2>Install, parse, inspect, export.</h2>
+          <p>
+            The core runtime has no heavyweight document-processing dependencies. Development
+            extras install pytest and Sphinx for validation and documentation.
+          </p>
+        </div>
+        <div class="grid-2">
+          <div>
+            <h3>Install for Development</h3>
+            <pre><code>python -m pip install -e ".[dev,docs]"
+python -m pytest -q
+sphinx-build -E -b html docs docs/_build/html</code></pre>
+          </div>
+          <div>
+            <h3>Use from Python</h3>
+            <pre><code>from rtfstruct import ParserOptions, parse_rtf
+
+document = parse_rtf(
+    r"{\rtf1\ansi Hello, \b world\b0!}",
+    options=ParserOptions(track_spans=True),
+)
+
+print(document.to_json())
+print(document.to_markdown())
+print(document.to_rtf())</code></pre>
+          </div>
+        </div>
+        <div class="callout">
+          `rtfstruct` is useful when RTF needs to become structured data for AI ingestion,
+          document intelligence, validation pipelines, legal tooling, local conversion, or
+          deterministic roundtrip tests.
+        </div>
+      </section>
+
+      <section class="card" id="flows">
+        <div class="card-header">
+          <div class="eyebrow">Flow Diagrams</div>
+          <h2>End-to-end system map.</h2>
+          <p>
+            The diagrams below describe the complete path from bytes to tokens, parser state,
+            document AST, diagnostics, exporters, writer, CLI, and integration helper shapes.
+          </p>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Whole System Lifecycle</h3>
+          <div class="mermaid">
+flowchart TD
+    A[RTF bytes or text] --> B[read_rtf or parse_rtf]
+    B --> C[RtfLexer token stream]
+    C --> D[Control word and symbol dispatch]
+    D --> E[ParserState mutable state machine]
+    E --> F[Document AST]
+    E --> G[Diagnostics collector]
+    F --> H[JSON exporter]
+    F --> I[Markdown exporter]
+    F --> J[RTF writer]
+    F --> K[CLI renderer]
+    F --> L[Integration helpers]
+    G --> F
+    H --> M[Machine JSON]
+    I --> N[Human-readable Markdown]
+    J --> O[Deterministic RTF]
+    K --> P[stdout or output file]
+    L --> Q[MarkItDown-style Markdown]
+    L --> R[Docling-style dictionary]
+    L --> S[Unstructured-style elements]
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Parser Control Flow</h3>
+          <div class="mermaid">
+flowchart TD
+    A[Input starts with rtf signature?] -->|No and recover=True| B[Emit RTF_MISSING_SIGNATURE diagnostic]
+    A -->|No and recover=False| C[Raise RtfSyntaxError]
+    A -->|Yes| D[Iterate lexer tokens]
+    D --> E{Token kind}
+    E -->|GROUP_START| F[Push style, paragraph, destination state]
+    E -->|GROUP_END| G[Finalize active destination and pop group state]
+    E -->|TEXT| H[Buffer text with optional source span]
+    E -->|CONTROL_WORD| I[Dispatch semantic control handler]
+    E -->|CONTROL_SYMBOL| J[Handle escaped chars, paragraph breaks, destination markers]
+    E -->|HEX_CHAR| K[Decode using active codepage or charset]
+    F --> D
+    G --> D
+    H --> D
+    I --> D
+    J --> D
+    K --> D
+    D --> L[EOF]
+    L --> M[Finalize pending table]
+    M --> N[Recover open destinations]
+    N --> O[Finish active paragraph]
+    O --> P[Assemble list blocks]
+    P --> Q[Return Document]
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Exporter and Writer Flow</h3>
+          <div class="mermaid">
+flowchart LR
+    A[Document AST] --> B{Output target}
+    B -->|JSON| C[JsonExporter]
+    C --> D[Metadata, styles, blocks, notes, images, diagnostics]
+    B -->|Markdown| E[MarkdownExporter]
+    E --> F[Paragraphs, inline formatting, links, lists, tables, notes]
+    F --> G{Complex table?}
+    G -->|No| H[GFM table]
+    G -->|Yes html| I[HTML table]
+    G -->|Yes gfm| J[Flattened GFM]
+    G -->|Yes omit| K[Omit table]
+    B -->|RTF| L[RtfWriter]
+    L --> M[Collect fonts, colors, lists, resources]
+    M --> N[Emit header tables]
+    N --> O[Walk AST blocks and inline nodes]
+    O --> P[Escaped deterministic RTF]
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="parser">
+        <div class="card-header">
+          <div class="eyebrow">Parser Internals</div>
+          <h2>How the reader understands RTF.</h2>
+          <p>
+            RTF is a nested control-word language. The parser keeps interpretation explicit:
+            tokenization is separate from semantic dispatch, and mutable parser state owns
+            destinations, styles, tables, lists, notes, annotations, images, and diagnostics.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <div class="diagram-card">
+            <h3>Lexer Tokenization</h3>
+            <div class="mermaid">
+flowchart TD
+    A[Raw RTF text] --> B{Current char}
+    B -->|{| C[GROUP_START token]
+    B -->|}| D[GROUP_END token]
+    B -->|backslash + letters| E[CONTROL_WORD with optional integer parameter]
+    B -->|backslash + apostrophe + hex| F[HEX_CHAR token]
+    B -->|backslash + symbol| G[CONTROL_SYMBOL token]
+    B -->|plain chars| H[TEXT token]
+    C --> I[Preserve source offsets]
+    D --> I
+    E --> I
+    F --> I
+    G --> I
+    H --> I
+            </div>
+          </div>
+
+          <div class="diagram-card">
+            <h3>Destination Routing</h3>
+            <div class="mermaid">
+flowchart TD
+    A[Control word enters dispatch] --> B{Destination or property?}
+    B -->|fonttbl colortbl info| C[Redirect text into metadata tables]
+    B -->|field fldinst fldrslt| D[Field context stack]
+    B -->|footnote| E[Footnote context]
+    B -->|annotation| F[Annotation context]
+    B -->|pict| G[Image context]
+    B -->|listtable listoverride| H[List definition context]
+    B -->|trowd cell row| I[TableBuilder context]
+    B -->|style controls| J[Flush text and update current style]
+    B -->|paragraph controls| K[Snapshot paragraph style]
+    C --> L[Document metadata/resources]
+    D --> M[Link or Field inline node]
+    E --> N[FootnoteRef + document footnote]
+    F --> O[AnnotationRef + document annotation]
+    G --> P[ImageInline + document image]
+    H --> Q[List post-pass metadata]
+    I --> R[Resolved Table AST]
+    J --> S[TextRun style]
+    K --> T[Paragraph style]
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-3">
+          <div class="mini-card">
+            <strong>Unicode Recovery</strong>
+            <p>`\uN` values use signed 16-bit recovery, skip fallback bytes according to `\ucN`, and emit replacement characters plus diagnostics for malformed values.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Hex and Codepages</strong>
+            <p>`\'xx` bytes decode through the active font charset, document `\ansicpgN`, or a CP1252 fallback with diagnostics for unsupported codepages.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Diagnostics</strong>
+            <p>Recoverable issues are capped and deduplicated, then attached to `Document.diagnostics` for machine-readable inspection.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="ast">
+        <div class="card-header">
+          <div class="eyebrow">AST Contract</div>
+          <h2>The document model.</h2>
+          <p>
+            The AST is the stable bridge between parsing and conversion. It avoids Qt,
+            Markdown, and RTF-specific output concerns while retaining document structure
+            and semantic formatting.
+          </p>
+        </div>
+
+        <div class="diagram-card">
+          <h3>AST Object Graph</h3>
+          <div class="mermaid">
+classDiagram
+    class Document {
+      blocks
+      metadata
+      styles
+      footnotes
+      annotations
+      images
+      diagnostics
+      semantic_equals()
+      to_json()
+      to_markdown()
+      to_rtf()
+    }
+    class Paragraph {
+      children
+      style
+      span
+    }
+    class TextRun {
+      text
+      style
+      span
+    }
+    class ListBlock {
+      ordered
+      items
+      list_id
+    }
+    class Table {
+      cells
+      row_count
+      col_count
+    }
+    class TableCell {
+      row
+      col
+      rowspan
+      colspan
+      blocks
+    }
+    class Image {
+      id
+      content_type
+      data
+      dimensions
+    }
+    Document --> Paragraph
+    Document --> ListBlock
+    Document --> Table
+    Document --> Image
+    Paragraph --> TextRun
+    Table --> TableCell
+    TableCell --> Paragraph
+    ListBlock --> Paragraph
+          </div>
+        </div>
+
+        <table>
+          <thead>
+            <tr><th>Layer</th><th>Nodes</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Document</td>
+              <td><code>Document</code>, <code>Metadata</code>, <code>StyleSheet</code></td>
+              <td>Top-level AST, metadata, style definitions, notes, images, diagnostics.</td>
+            </tr>
+            <tr>
+              <td>Blocks</td>
+              <td><code>Paragraph</code>, <code>ListBlock</code>, <code>ListItem</code>, <code>Table</code>, <code>TableCell</code></td>
+              <td>Reading-order structure, resolved lists, coordinate-based tables with row and column spans.</td>
+            </tr>
+            <tr>
+              <td>Inline</td>
+              <td><code>TextRun</code>, <code>Link</code>, <code>Field</code>, <code>FootnoteRef</code>, <code>AnnotationRef</code>, <code>ImageInline</code>, <code>Tab</code>, <code>LineBreak</code></td>
+              <td>Styled text and inline semantic references.</td>
+            </tr>
+            <tr>
+              <td>Diagnostics</td>
+              <td><code>Diagnostic</code>, <code>Severity</code></td>
+              <td>Machine-readable recovery events for malformed input, unsupported controls, and safety limits.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="card" id="conversion">
+        <div class="card-header">
+          <div class="eyebrow">Conversion Recipes</div>
+          <h2>Read once, export many ways.</h2>
+          <p>
+            `rtfstruct` separates parsing from output. The same `Document` AST can produce
+            structured JSON, readable Markdown, deterministic RTF, CLI output, or integration
+            adapter shapes.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <h3>RTF to JSON</h3>
+            <pre><code>from rtfstruct import JsonOptions, parse_rtf
+
+document = parse_rtf(rtf_bytes)
+data = document.to_json(
+    options=JsonOptions(
+        include_diagnostics=True,
+        include_image_data=False,
+    )
+)</code></pre>
+          </div>
+          <div>
+            <h3>RTF to Markdown</h3>
+            <pre><code>from rtfstruct import MarkdownOptions, parse_rtf
+
+document = parse_rtf(rtf_text)
+markdown = document.to_markdown(
+    options=MarkdownOptions(
+        preserve_colors=True,
+        complex_tables="html",
+    )
+)</code></pre>
+          </div>
+          <div>
+            <h3>AST to RTF</h3>
+            <pre><code>from rtfstruct import parse_rtf, to_rtf, write_rtf
+
+document = parse_rtf(r"{\rtf1 Hello}")
+rtf = to_rtf(document)
+write_rtf(document, "normalized.rtf")</code></pre>
+          </div>
+          <div>
+            <h3>Integration Helpers</h3>
+            <pre><code>from rtfstruct.integrations import (
+    convert_rtf_to_markdown,
+    partition_rtf,
+    to_docling_dict,
+)
+
+markdown = convert_rtf_to_markdown(rtf_text)
+elements = partition_rtf(rtf_text)
+docling = to_docling_dict(rtf_text)</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="api">
+        <div class="card-header">
+          <div class="eyebrow">API Reference</div>
+          <h2>Public Python surface.</h2>
+          <p>
+            Anything exported from `rtfstruct.__init__` is public API for the pre-alpha
+            package. Internal modules may continue to evolve.
+          </p>
+        </div>
+
+        <div class="api-grid">
+          <div class="mini-card">
+            <strong>Reader</strong>
+            <p><code>parse_rtf(data, options=None)</code><br>Parse bytes or text into a `Document`.</p>
+            <p><code>read_rtf(path, options=None)</code><br>Read an RTF file and parse it.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Writers</strong>
+            <p><code>to_rtf(document)</code><br>Return deterministic RTF text.</p>
+            <p><code>write_rtf(document, path)</code><br>Write RTF to a file.</p>
+            <p><code>to_markdown(document, options=None)</code><br>Convenience Markdown export.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Options</strong>
+            <p><code>ParserOptions</code>: recovery, image extraction, spans, safety caps.</p>
+            <p><code>JsonOptions</code>: null handling, diagnostics, image payloads.</p>
+            <p><code>MarkdownOptions</code>: colors, fonts, annotations, complex tables.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Core AST</strong>
+            <p><code>Document</code>, <code>Paragraph</code>, <code>TextRun</code>, <code>TextStyle</code>, <code>ParagraphStyle</code>, <code>StyleSheet</code>.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Structure</strong>
+            <p><code>ListBlock</code>, <code>ListItem</code>, <code>Table</code>, <code>TableCell</code>, <code>Image</code>, <code>ImageInline</code>.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Semantics</strong>
+            <p><code>Link</code>, <code>Field</code>, <code>Footnote</code>, <code>FootnoteRef</code>, <code>Annotation</code>, <code>AnnotationRef</code>.</p>
+          </div>
+        </div>
+
+        <div class="grid-2">
+          <div>
+            <h3>Inspect Diagnostics</h3>
+            <pre><code>from rtfstruct import parse_rtf
+
+document = parse_rtf(r"{\rtf1\u999999?}")
+
+for diagnostic in document.diagnostics:
+    print(
+        diagnostic.severity,
+        diagnostic.code,
+        diagnostic.message,
+    )</code></pre>
+          </div>
+          <div>
+            <h3>Semantic Roundtrip</h3>
+            <pre><code>from rtfstruct import parse_rtf, to_rtf
+
+original = parse_rtf(rtf_text)
+reparsed = parse_rtf(to_rtf(original))
+
+assert original.semantic_equals(reparsed)</code></pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" id="cli">
+        <div class="card-header">
+          <div class="eyebrow">Command Line</div>
+          <h2>Convert files without writing Python.</h2>
+          <p>
+            The `rtfstruct` console script is installed from package metadata and can write
+            to stdout or an output file.
+          </p>
+        </div>
+        <pre><code>rtfstruct input.rtf --to markdown > output.md
+rtfstruct input.rtf --to json --output output.json
+rtfstruct input.rtf --to diagnostics
+rtfstruct input.rtf --to rtf --output normalized.rtf
+rtfstruct input.rtf --to json --track-spans --include-image-data</code></pre>
+        <div class="pill-row">
+          <span class="pill">json</span>
+          <span class="pill">markdown</span>
+          <span class="pill">rtf</span>
+          <span class="pill">diagnostics</span>
+          <span class="pill">source spans</span>
+          <span class="pill">image payloads</span>
+        </div>
+      </section>
+
+      <section class="card" id="testing">
+        <div class="card-header">
+          <div class="eyebrow">Testing and Quality</div>
+          <h2>Reference fixtures and recovery coverage.</h2>
+          <p>
+            The suite covers parser behavior, exporters, writer roundtrips, reference RTF
+            fixtures, malformed input recovery, source spans, license headers, docs, CLI,
+            and integration helper shapes.
+          </p>
+        </div>
+        <div class="pipeline-grid">
+          <div class="mini-card">
+            <strong>Reference RTF Corpus</strong>
+            <p>Thirteen sanitized fixture files cover rich text, colors, images, annotations, tables, merge rows/columns, special characters, and visible list markers.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Golden Exports</strong>
+            <p>Golden JSON and Markdown fixtures lock down stable output shape for representative documents.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Malformed Input</strong>
+            <p>Recovery tests exercise invalid signatures, unclosed groups, invalid hex, invalid Unicode, unsupported controls, and diagnostic suppression.</p>
+          </div>
+          <div class="mini-card">
+            <strong>Release Checks</strong>
+            <p>CI runs tests, Sphinx, wheel build, and wheel smoke installation on Python 3.11 and 3.12.</p>
+          </div>
+        </div>
+        <pre><code>python -m pytest -q
+sphinx-build -E -b html docs docs/_build/html
+python -m pip wheel . --no-deps -w /tmp/rtfstruct-wheel
+python benchmarks/parse_generated.py --paragraphs 10000</code></pre>
+      </section>
+
+      <section class="card" id="release">
+        <div class="card-header">
+          <div class="eyebrow">GitHub Pages and Release Notes</div>
+          <h2>Static site ready.</h2>
+          <p>
+            This page is a standalone static HTML entry point at `docs/index.html`.
+            GitHub Pages can serve it directly from the `docs/` folder. Sphinx source
+            documentation remains in the same folder for generated API docs when needed.
+          </p>
+        </div>
+        <table>
+          <thead>
+            <tr><th>Artifact</th><th>Purpose</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><code>docs/index.html</code></td><td>Static GitHub Pages landing page with flow diagrams and usage guide.</td></tr>
+            <tr><td><code>docs/*.md</code></td><td>Sphinx source documentation for API, parser, exporters, integrations, and performance.</td></tr>
+            <tr><td><code>README.md</code></td><td>Repository and package landing page.</td></tr>
+            <tr><td><code>CHANGELOG.md</code></td><td>Initial pre-alpha release notes.</td></tr>
+            <tr><td><code>.github/workflows/ci.yml</code></td><td>Automated tests, docs build, wheel build, and wheel smoke test.</td></tr>
+          </tbody>
+        </table>
+        <p class="footer-note">rtfstruct is licensed under Apache License, Version 2.0.</p>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: "base",
+      securityLevel: "strict",
+      themeVariables: {
+        background: "#fffdf8",
+        primaryColor: "#f8efe4",
+        primaryTextColor: "#25211c",
+        primaryBorderColor: "#8e4f2f",
+        lineColor: "#315f73",
+        secondaryColor: "#edf4f5",
+        tertiaryColor: "#f6f1e8",
+        fontFamily: "Avenir Next, Segoe UI, sans-serif"
+      }
+    });
+  </script>
+</body>
+</html>

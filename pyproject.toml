@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Lee Powell
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rtfstruct"
+version = "0.1.0"
+description = "A production-informed Python RTF parser and writer for structured document processing."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [
+  { name = "Lee Powell" },
+]
+keywords = ["rtf", "parser", "documents", "markdown", "json"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Text Processing :: Markup",
+]
+
+[project.scripts]
+rtfstruct = "rtfstruct.cli:main"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+]
+docs = [
+  "myst-parser",
+  "sphinx",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rtfstruct"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

@@ -5,8 +5,7 @@ Copyright 2026 Lee Powell
 # rtfstruct
 
 `rtfstruct` is a Python 3.11+ RTF reader and writer for structured document
-processing. It parses RTF into a neutral document AST, exports that structure to
-JSON or Markdown, and writes deterministic RTF from the AST.
+processing.
 
 The parser is designed around explicit recovery and diagnostics, so malformed
 or unusual RTF can still produce useful output while preserving warnings for
@@ -14,18 +13,32 @@ callers.
 
 ## About
 
-rtfstruct is a standalone Python RTF parser and writer for structured document
-processing.
+`rtfstruct` parses Rich Text Format into a neutral document AST that preserves
+paragraphs, inline styles, links, fields, notes, annotations, lists, tables,
+images, metadata, source spans, and recoverable diagnostics.
 
-Its primary purpose is to convert RTF into a granular, AI-ready document AST
-that preserves document structure, formatting, tables, lists, links,
-annotations, footnotes, images, metadata, and recoverable source detail before
-exporting to JSON, Markdown, or RTF.
+The AST can then be exported to JSON for machines, Markdown for humans, or
+deterministic RTF for roundtrip workflows.
 
-The implementation is informed by Lee Powell’s experience building production
-C++ RTF parsing and writing infrastructure, including the mature parser and
-writer he authored for Scrivener for Windows and refined through approximately
-15 years of real-world use by hundreds of thousands of users.
+`rtfstruct` was written by Lee Powell, who previously built the production C++
+RTF parser and writer used in Scrivener for Windows and Linux. That
+infrastructure was pressure-tested for more than a decade across hundreds of
+thousands of users and long-form writing projects.
+
+This project applies that same production-informed discipline to AI document
+infrastructure.
+
+Most AI document pipelines fail before retrieval begins. Structure is flattened.
+Tables lose meaning. Lists collapse. Comments and notes disappear. Source
+traceability is broken. The model is then asked to reason over damaged input.
+
+`rtfstruct` is built for the layer most pipelines underestimate: document
+ingestion before chunking, embedding, retrieval, and generation.
+
+It is not a plain-text stripper, a Markdown converter, or a toy parser. It is
+an AST-first RTF reader and writer for systems where document structure still
+matters: AI ingestion, RAG, legal discovery, banking archives, forensic document
+tracing, publishing, and long-form document intelligence.
 
 ## Current Status
 

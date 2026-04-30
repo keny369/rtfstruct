@@ -444,11 +444,37 @@ Copyright 2026 Lee Powell
         <div class="eyebrow">Python 3.11+ · Apache-2.0 · Pre-alpha</div>
         <h2>Read RTF as structure, not just text.</h2>
         <p>
-          `rtfstruct` parses Rich Text Format into a neutral document AST that preserves
+          <code>rtfstruct</code> parses Rich Text Format into a neutral document AST that preserves
           paragraphs, inline styles, links, fields, notes, annotations, lists, tables,
-          images, metadata, source spans, and recoverable diagnostics. The AST can then
-          be exported to JSON for machines, Markdown for humans, or deterministic RTF for
+          images, metadata, source spans, and recoverable diagnostics.
+        </p>
+        <p>
+          The AST can then be exported to JSON for machines, Markdown for humans, or deterministic RTF for
           roundtrip workflows.
+        </p>
+        <p>
+          <code>rtfstruct</code> was written by Lee Powell, who previously built the production C++ RTF
+          parser and writer used in Scrivener for Windows and Linux. That infrastructure was
+          pressure-tested for more than a decade across hundreds of thousands of users and long-form
+          writing projects.
+        </p>
+        <p>
+          This project applies that same production-informed discipline to AI document infrastructure.
+        </p>
+        <p>
+          Most AI document pipelines fail before retrieval begins. Structure is flattened. Tables lose
+          meaning. Lists collapse. Comments and notes disappear. Source traceability is broken. The model
+          is then asked to reason over damaged input.
+        </p>
+        <p>
+          <code>rtfstruct</code> is built for the layer most pipelines underestimate: document ingestion
+          before chunking, embedding, retrieval, and generation.
+        </p>
+        <p>
+          It is not a plain-text stripper, a Markdown converter, or a toy parser. It is an AST-first RTF
+          reader and writer for systems where document structure still matters: AI ingestion, RAG, legal
+          discovery, banking archives, forensic document tracing, publishing, and long-form document
+          intelligence.
         </p>
         <div class="hero-actions">
           <a class="action" href="#quick-start">

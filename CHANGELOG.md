@@ -6,7 +6,7 @@ Copyright 2026 Lee Powell
 
 All notable changes to `rtfstruct` will be documented in this file.
 
-## 0.1.0 - Unreleased
+## 0.1.0 - 2026-05-01
 
 Initial pre-alpha library surface:
 

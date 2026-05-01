@@ -26,8 +26,11 @@
   --ll-mono: "JetBrains Mono", "SFMono-Regular", monospace;
 }
 
-html[data-theme="light"],
-html[data-theme="dark"] {
+/* Furo sets `data-theme` on `body` (auto/light/dark); keep as a fallback with
+   higher-specificity selectors than Furo’s plain `body { … }` light block. */
+body[data-theme="light"],
+body[data-theme="dark"],
+body[data-theme="auto"] {
   --color-background-primary: var(--ll-bg);
   --color-background-secondary: var(--ll-bg-elevated);
   --color-foreground-primary: var(--ll-text);

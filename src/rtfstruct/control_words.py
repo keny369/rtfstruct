@@ -5,7 +5,7 @@
 
 This module maps lexer tokens to parser-state mutations. The dispatch table is
 small for Milestone 1 but intentionally explicit so each supported RTF control
-word can gain focused tests as behaviour is ported from the C++ reference.
+word can gain focused tests as behavior is ported from the C++ reference.
 """
 
 from __future__ import annotations
@@ -301,7 +301,7 @@ def append_unicode_value(state: ParserState, token: Token) -> None:
     """Append a Unicode control-word value and skip fallback text.
 
     The C++ reference treats negative `\\u` values as signed 16-bit code units.
-    This implementation preserves that early behaviour while recording invalid
+    This implementation preserves that early behavior while recording invalid
     scalar values as diagnostics.
     """
     value = token.parameter if token.has_parameter else ord("?")

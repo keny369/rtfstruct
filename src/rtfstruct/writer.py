@@ -70,7 +70,7 @@ class RtfWriter:
                 next_id = max(next_id, list_id + 1)
 
     def _collect_resources(self) -> None:
-        """Collect font and colour resources before writing the header."""
+        """Collect font and color resources before writing the header."""
         for block in self.document.blocks:
             self._collect_block_resources(block)
         for footnote in self.document.footnotes.values():
@@ -109,7 +109,7 @@ class RtfWriter:
                 self._collect_inline_resources(child)
 
     def _ensure_color(self, color: Color) -> int:
-        """Return a deterministic colour-table id for a colour."""
+        """Return a deterministic color-table id for a color."""
         existing = self._color_ids.get(color)
         if existing is not None:
             return existing
@@ -125,7 +125,7 @@ class RtfWriter:
         return r"{\fonttbl" + "".join(entries) + "}"
 
     def _color_table(self) -> str:
-        """Emit a colour table if non-default colours are used."""
+        """Emit a color table if non-default colors are used."""
         if not self._color_ids:
             return ""
         entries = [";"]

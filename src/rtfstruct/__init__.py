@@ -1,7 +1,13 @@
 # SPDX-License-Identifier: Apache-2.0
 # Copyright 2026 Lee Powell
 
-"""Public API for rtfstruct.
+"""Read RTF as structure, not just text.
+
+`rtfstruct` is a free open-source Python library for converting Rich Text Format
+into a neutral document AST with JSON, Markdown, and RTF export support.
+
+`rtfstruct` is part of Sourcetrace by Lumen & Lever:
+https://lumenandlever.com
 
 The package exposes a small documented surface for reading RTF into the AST and
 exporting supported structures. Internal modules may evolve while the project is

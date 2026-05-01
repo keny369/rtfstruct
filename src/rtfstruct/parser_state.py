@@ -145,7 +145,7 @@ class ParserState:
         current_destination: Active RTF destination.
         destination_stack: Group-scoped destination stack.
         font_table: Parsed font table keyed by RTF font number.
-        color_table: Parsed colour table indexed by RTF colour number.
+        color_table: Parsed color table indexed by RTF color number.
         field_stack: Active field contexts.
         unicode_skip_bytes: Current `\\ucN` fallback length.
         fallback_chars_to_skip: Remaining fallback characters after `\\uN`.
@@ -517,7 +517,7 @@ class ParserState:
         return f"cp{self.ansi_codepage}"
 
     def set_color_component(self, component: str, value: int) -> None:
-        """Set a component of the current colour-table entry."""
+        """Set a component of the current color-table entry."""
         if self.current_destination is not Destination.COLOR_TABLE:
             return
         clamped = max(0, min(255, value))
@@ -529,7 +529,7 @@ class ParserState:
             self.current_color_blue = clamped
 
     def apply_foreground_color(self, index: int) -> None:
-        """Apply a colour-table entry as the current foreground colour."""
+        """Apply a color-table entry as the current foreground color."""
         color = self._color_at(index, control_word="cf")
         if index == 0:
             self.set_style(foreground=None)
@@ -537,7 +537,7 @@ class ParserState:
             self.set_style(foreground=color)
 
     def apply_background_color(self, index: int, control_word: str) -> None:
-        """Apply a colour-table entry as the current background/highlight colour."""
+        """Apply a color-table entry as the current background/highlight color."""
         color = self._color_at(index, control_word=control_word)
         if index == 0:
             self.set_style(background=None)
@@ -919,7 +919,7 @@ class ParserState:
                 self.current_font_name_parts.append(char)
 
     def _add_color_table_text(self, text: str) -> None:
-        """Commit colour-table entries on semicolon separators."""
+        """Commit color-table entries on semicolon separators."""
         for char in text:
             if char == ";":
                 self._commit_color_entry()
@@ -938,7 +938,7 @@ class ParserState:
         self.current_font_charset = None
 
     def _commit_color_if_ready(self) -> None:
-        """Commit a trailing colour entry if components were seen without `;`."""
+        """Commit a trailing color entry if components were seen without `;`."""
         if any(
             component is not None
             for component in (self.current_color_red, self.current_color_green, self.current_color_blue)
@@ -946,7 +946,7 @@ class ParserState:
             self._commit_color_entry()
 
     def _commit_color_entry(self) -> None:
-        """Commit the current colour table entry and reset component state."""
+        """Commit the current color table entry and reset component state."""
         if all(
             component is None
             for component in (self.current_color_red, self.current_color_green, self.current_color_blue)
@@ -965,12 +965,12 @@ class ParserState:
         self.current_color_blue = None
 
     def _color_at(self, index: int, *, control_word: str) -> Color | None:
-        """Return a colour-table entry or emit a missing-colour diagnostic."""
+        """Return a color-table entry or emit a missing-color diagnostic."""
         if 0 <= index < len(self.color_table):
             return self.color_table[index]
         self.diagnostics.add(
             "RTF_MISSING_COLOR",
-            f"Colour table entry {index} is not available.",
+            f"Color table entry {index} is not available.",
             Severity.WARNING,
             control_word=control_word,
         )

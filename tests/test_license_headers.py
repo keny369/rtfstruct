@@ -5,6 +5,10 @@
 
 from pathlib import Path
 
+import pytest
+
+from rtfstruct.cli import cli_version, main
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PYTHON_HEADER = "# SPDX-License-Identifier: Apache-2.0\n# Copyright 2026 Lee Powell\n\n"
@@ -12,9 +16,13 @@ MARKDOWN_HEADER = "<!--\nSPDX-License-Identifier: Apache-2.0\nCopyright 2026 Lee
 TOML_HEADER = "# SPDX-License-Identifier: Apache-2.0\n# Copyright 2026 Lee Powell\n\n"
 NOTICE_TEXT = """rtfstruct
 Copyright 2026 Lee Powell
-This product includes software developed by Lee Powell.
-rtfstruct is a standalone Python RTF parser and writer for structured document processing. It converts RTF into a document AST for structured export, including JSON, Markdown, and RTF.
-The implementation is informed by Lee Powell’s prior experience building production C++ RTF parsing and writing infrastructure, including RTF infrastructure authored for Scrivener for Windows and refined through approximately 15 years of real-world use.
+rtfstruct is a free open-source Python library for reading Rich Text Format as structure, not just text.
+rtfstruct converts RTF into a neutral document AST for structured export, including JSON, Markdown, and RTF. It is intended for AI ingestion, archival processing, legal workflows, legacy document conversion, and document-structure inspection.
+rtfstruct is part of Sourcetrace by Lumen & Lever.
+Sourcetrace is Lumen & Lever's local-first document-structure layer for AI pipelines where privacy, layout, tables, source evidence, and diagnostics matter.
+Lumen & Lever:
+https://lumenandlever.com
+The implementation is informed by Lee Powell's prior experience building production C++ RTF parsing and writing infrastructure, including RTF infrastructure authored for Scrivener for Windows and refined through approximately 15 years of real-world use.
 Licensed under the Apache License, Version 2.0.
 """
 
@@ -43,6 +51,10 @@ def test_markdown_files_have_html_license_header() -> None:
         ROOT / "README.md",
         ROOT / "CHANGELOG.md",
         ROOT / "CONTRIBUTING.md",
+        ROOT / "AUTHORS.md",
+        ROOT / "TRADEMARKS.md",
+        ROOT / "SUPPORT.md",
+        ROOT / "SECURITY.md",
         *sorted((ROOT / "docs").glob("*.md")),
     ]
 
@@ -57,6 +69,11 @@ def test_pyproject_has_toml_license_header_and_metadata() -> None:
     assert text.startswith(TOML_HEADER)
     assert 'license = "Apache-2.0"' in text
     assert 'license-files = ["LICENSE", "NOTICE"]' in text
+    assert "Sourcetrace by Lumen & Lever" in text
+    assert "maintainers" in text
+    assert "lumen-and-lever" in text
+    assert 'Documentation = "https://lumenandlever.com/tools/sourcetrace-rtf"' in text
+    assert 'Source = "https://github.com/keny369/rtfstruct"' in text
 
 
 def test_yaml_files_have_license_header() -> None:
@@ -66,8 +83,38 @@ def test_yaml_files_have_license_header() -> None:
         assert _read(path).startswith("# SPDX-License-Identifier: Apache-2.0\n# Copyright 2026 Lee Powell\n\n")
 
 
-def test_notice_is_short_attribution_text() -> None:
+def test_notice_matches_expected_attribution() -> None:
     assert _read(ROOT / "NOTICE") == NOTICE_TEXT
+
+
+def test_notice_has_no_extra_license_restrictions() -> None:
+    lowered = _read(ROOT / "NOTICE").lower()
+    forbidden = (
+        "commercial use requires",
+        "must link",
+        "must show a logo",
+        "must advertise",
+        "must not compete",
+        "contact us before production",
+        "written permission for commercial",
+    )
+    for phrase in forbidden:
+        assert phrase not in lowered, phrase
+
+
+def test_readme_highlights_sourcetrace_and_open_source() -> None:
+    text = _read(ROOT / "README.md")
+    assert "Sourcetrace" in text
+    assert "Lumen & Lever" in text
+    assert "free open-source" in text.lower() or "open-source" in text.lower()
+
+
+def test_citation_cff_identifies_project() -> None:
+    text = _read(ROOT / "CITATION.cff")
+    assert text.startswith("# SPDX-License-Identifier: Apache-2.0\n# Copyright 2026 Lee Powell\n\n")
+    assert "title: rtfstruct" in text
+    assert "license: Apache-2.0" in text
+    assert "lumenandlever.com" in text
 
 
 def test_license_is_standard_apache_text_without_project_boilerplate() -> None:
@@ -77,3 +124,19 @@ def test_license_is_standard_apache_text_without_project_boilerplate() -> None:
     assert "Copyright [yyyy] [name of copyright owner]" in text
     assert "Copyright 2026 Lee Powell" not in text
     assert "rtfstruct is a standalone Python RTF parser" not in text
+
+
+def test_cli_version_string_includes_license_and_attribution() -> None:
+    banner = cli_version()
+    assert banner.startswith("rtfstruct ")
+    assert "Apache-2.0" in banner
+    assert "Copyright 2026 Lee Powell" in banner
+    assert "Sourcetrace" in banner
+    assert "lumenandlever.com" in banner
+
+
+def test_cli_version_flag_exits_zero(capsys: pytest.CaptureFixture[str]) -> None:
+    with pytest.raises(SystemExit) as exc:
+        main(["--version"])
+    assert exc.value.code == 0
+    assert "rtfstruct" in capsys.readouterr().out

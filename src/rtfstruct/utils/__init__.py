@@ -3,6 +3,6 @@
 
 """Utility helpers for rtfstruct.
 
-This package will contain pure helpers for escaping, Unicode recovery, colours,
+This package will contain pure helpers for escaping, Unicode recovery, colors,
 and unit conversion as the parser milestones expand.
 """

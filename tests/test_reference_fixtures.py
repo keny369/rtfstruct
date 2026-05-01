@@ -56,7 +56,7 @@ def test_sample01_covers_inline_formatting_annotation_and_image() -> None:
     assert any(run.style.foreground is not None for run in runs)
 
 
-def test_sample02_covers_paragraph_styles_tabs_colours_fonts_table_and_images() -> None:
+def test_sample02_covers_paragraph_styles_tabs_colors_fonts_table_and_images() -> None:
     document = _fixture("sample02.rtf")
     text = _document_text(document)
     runs = _text_runs(document.blocks)
@@ -99,7 +99,7 @@ def test_sample04_preserves_annotation_and_sanitized_inline_markers() -> None:
     assert "Scrv" not in text
 
 
-def test_sample05_covers_full_table_layout_and_coloured_cell_text() -> None:
+def test_sample05_covers_full_table_layout_and_colored_cell_text() -> None:
     document = _fixture("sample05.rtf")
     tables = _tables(document.blocks)
     text = _document_text(document)

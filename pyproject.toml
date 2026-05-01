@@ -8,7 +8,7 @@ build-backend = "hatchling.build"
 [project]
 name = "rtfstruct"
 version = "0.1.0"
-description = "A production-informed Python RTF parser and writer for structured document processing."
+description = "Read RTF as structure, not just text. Part of Sourcetrace by Lumen & Lever."
 readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
@@ -16,7 +16,18 @@ license-files = ["LICENSE", "NOTICE"]
 authors = [
   { name = "Lee Powell" },
 ]
-keywords = ["rtf", "parser", "documents", "markdown", "json"]
+maintainers = [
+  { name = "Lee Powell" },
+]
+keywords = [
+  "rtf",
+  "parser",
+  "document-structure",
+  "ast",
+  "ai-ingestion",
+  "sourcetrace",
+  "lumen-and-lever",
+]
 classifiers = [
   "Development Status :: 2 - Pre-Alpha",
   "Intended Audience :: Developers",
@@ -26,6 +37,14 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Topic :: Text Processing :: Markup",
 ]
+
+[project.urls]
+Homepage = "https://lumenandlever.com"
+Documentation = "https://lumenandlever.com/tools/sourcetrace-rtf"
+Source = "https://github.com/keny369/rtfstruct"
+Issues = "https://github.com/keny369/rtfstruct/issues"
+"Lumen & Lever" = "https://lumenandlever.com"
+"Sourcetrace" = "https://lumenandlever.com/tools"
 
 [project.scripts]
 rtfstruct = "rtfstruct.cli:main"

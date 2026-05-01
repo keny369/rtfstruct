@@ -4,7 +4,7 @@
 """Markdown exporter.
 
 Markdown is a lossy backend and must not shape the AST. This skeleton exporter
-exists for API completeness while JSON and parser behaviour are still stabilising.
+exists for API completeness while JSON and parser behavior are still stabilizing.
 """
 
 from __future__ import annotations
@@ -141,7 +141,7 @@ class MarkdownExporter:
         return f'<span style="{" ".join(declarations)}">{text}</span>'
 
     def _css_color(self, color: Color) -> str:
-        """Return a CSS hex colour string."""
+        """Return a CSS hex color string."""
         return f"#{color.red:02x}{color.green:02x}{color.blue:02x}"
 
     def _half_points_to_css_points(self, value: int) -> str:

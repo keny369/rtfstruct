@@ -32,7 +32,7 @@ class SourceSpan:
 
 @dataclass(frozen=True, slots=True)
 class Color:
-    """RGB colour value.
+    """RGB color value.
 
     Attributes:
         red: Red channel from 0 to 255.
@@ -380,7 +380,7 @@ class Document:
     def to_markdown(self, options: MarkdownOptions | None = None) -> str:
         """Export this document to Markdown.
 
-        Markdown export is intentionally minimal until JSON and AST behaviour are
+        Markdown export is intentionally minimal until JSON and AST behavior are
         stable.
         """
         from rtfstruct.markdown import MarkdownExporter

@@ -16,3 +16,4 @@ Initial pre-alpha library surface:
 - Semantic equality for roundtrip-focused comparisons.
 - CLI entry point and dependency-free integration helper shapes.
 - Sphinx documentation, reference fixture coverage, golden exports, malformed-input coverage, and packaging metadata.
+- Apache-2.0 attribution refresh: NOTICE, CITATION.cff, AUTHORS / TRADEMARKS / SUPPORT / SECURITY, PyPI-oriented README copy, and Sourcetrace by Lumen & Lever project links (no extra license restrictions).

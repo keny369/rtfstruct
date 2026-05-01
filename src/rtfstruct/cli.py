@@ -16,6 +16,23 @@ from rtfstruct.reader import read_rtf
 from rtfstruct.writer import to_rtf
 
 
+def cli_version() -> str:
+    """Return multi-line ``--version`` text for the CLI."""
+    try:
+        from importlib.metadata import version
+
+        ver = version("rtfstruct")
+    except Exception:
+        ver = "0.1.0"
+    return (
+        f"rtfstruct {ver}\n"
+        "Apache-2.0\n"
+        "Copyright 2026 Lee Powell\n"
+        "Part of Sourcetrace by Lumen & Lever\n"
+        "https://lumenandlever.com"
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     """Build the command-line argument parser.
 
@@ -55,6 +72,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=10_000,
         help="Maximum diagnostics retained while parsing.",
     )
+    parser.add_argument("--version", action="version", version=cli_version())
     return parser
 
 

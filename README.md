@@ -4,6 +4,24 @@ Copyright 2026 Lee Powell
 -->
 # rtfstruct
 
+## rtfstruct
+
+Read RTF as structure, not just text.
+
+`rtfstruct` is a free open-source Python library for converting Rich Text Format
+into a neutral document AST for structured export, including JSON, Markdown, and
+RTF. It is part of **Sourcetrace by Lumen & Lever**, a local-first
+document-structure layer for AI pipelines where privacy, layout, tables, source
+evidence, and diagnostics matter.
+
+Lumen & Lever: https://lumenandlever.com
+
+`rtfstruct` is part of **Sourcetrace by Lumen & Lever**. Lumen & Lever helps
+organizations establish structural control over AI exposure, including the
+documents those systems ingest.
+
+https://lumenandlever.com
+
 `rtfstruct` is a Python 3.11+ RTF reader and writer for structured document
 processing.
 
@@ -27,7 +45,7 @@ engineering was later sold as a white-label engagement to Literature & Latte.
 
 Today he advises executives and boards on structural AI readiness through
 [Lumen & Lever](https://lumenandlever.com): establishing control over AI already
-in use, clarifying exposure, and deciding whether an organisation is structurally
+in use, clarifying exposure, and deciding whether an organization is structurally
 ready to scale before more capital goes out the door—the same discipline he
 applied as architect of Scrivener and Scapple and as an enterprise architect at
 Commonwealth Bank and Deutsche Bank.
@@ -160,9 +178,22 @@ Sphinx source documentation:
 - `docs/cli.md`, `docs/integrations.md`, and `docs/performance.md` cover the
   command line, adapter helpers, and performance guardrails.
 
+## Commercial context
+
+`rtfstruct` is free open-source software.
+
+For organizations using RTF, PDF, or other document formats inside AI ingestion,
+RAG, legal discovery, financial tracing, or internal knowledge systems,
+Lumen & Lever provides document-structure review and AI control advisory work.
+
+https://lumenandlever.com
+
 ## License
 
-rtfstruct is licensed under the Apache License, Version 2.0. See `LICENSE` for
-details.
+`rtfstruct` is released under the Apache License, Version 2.0.
+
+Copyright 2026 Lee Powell.
+
+See `LICENSE` and `NOTICE`.
 
 Generated files are covered by the repository `LICENSE` unless otherwise stated.

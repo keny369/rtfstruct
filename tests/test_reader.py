@@ -48,7 +48,7 @@ def test_parse_font_family_and_font_size() -> None:
     assert run.style.font_size_half_points == 28
 
 
-def test_parse_foreground_and_highlight_colours() -> None:
+def test_parse_foreground_and_highlight_colors() -> None:
     document = parse_rtf(
         r"{\rtf1{\colortbl;\red255\green0\blue0;\red255\green255\blue0;}"
         r"\cf1\highlight2 Styled}"
@@ -67,7 +67,7 @@ def test_parse_foreground_and_highlight_colours() -> None:
     assert run.style.background.blue == 0
 
 
-def test_missing_font_and_colour_entries_emit_diagnostics() -> None:
+def test_missing_font_and_color_entries_emit_diagnostics() -> None:
     document = parse_rtf(r"{\rtf1\f9\cf3 Text}")
 
     assert any(diagnostic.code == "RTF_MISSING_FONT" for diagnostic in document.diagnostics)
@@ -114,7 +114,7 @@ def test_json_export_uses_ast_shape() -> None:
     ]
 
 
-def test_json_export_includes_font_and_colour_style() -> None:
+def test_json_export_includes_font_and_color_style() -> None:
     document = parse_rtf(
         r"{\rtf1{\fonttbl{\f0 Arial;}}{\colortbl;\red1\green2\blue3;}\f0\cf1 Text}"
     )

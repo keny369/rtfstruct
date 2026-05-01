@@ -32,3 +32,4 @@ def test_static_docs_site_contains_required_sections_and_diagrams() -> None:
     assert "MarkdownOptions" in html
     assert "rtfstruct input.rtf --to json" in html
     assert "GitHub Pages" in html
+    assert "Sourcetrace" in html

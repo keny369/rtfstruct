@@ -1,0 +1,15 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2026 Lee Powell
+
+cff-version: 1.2.0
+title: rtfstruct
+message: "If you use rtfstruct, please cite the project."
+type: software
+authors:
+  - family-names: Powell
+    given-names: Lee
+year: 2026
+license: Apache-2.0
+repository-code: "https://github.com/keny369/rtfstruct"
+url: "https://lumenandlever.com/tools/sourcetrace-rtf"
+abstract: "rtfstruct is a free open-source Python library for reading Rich Text Format as structure, not just text. It is part of Sourcetrace by Lumen & Lever."

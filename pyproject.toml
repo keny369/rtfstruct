@@ -54,6 +54,7 @@ dev = [
   "pytest",
 ]
 docs = [
+  "furo",
   "myst-parser",
   "sphinx",
 ]

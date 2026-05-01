@@ -1,0 +1,190 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ * Copyright 2026 Lee Powell
+ *
+ * Lumen & Lever – Furo theme overlay for rtfstruct / Sourcetrace RTF docs.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap");
+
+:root {
+  --ll-bg: #0b0d10;
+  --ll-bg-elevated: #11151a;
+  --ll-bg-card: #141a20;
+  --ll-bg-card-hover: #18202a;
+  --ll-border: #232a33;
+  --ll-border-accent: #2f3946;
+  --ll-text: #e7e9ec;
+  --ll-text-secondary: #bcc3cb;
+  --ll-text-muted: #8e98a3;
+  --ll-accent: #c4a882;
+  --ll-accent-bright: #d9c2a3;
+  --ll-accent-dim: #9a846d;
+  --ll-white: #eef1f4;
+  --ll-serif: "DM Serif Display", Georgia, serif;
+  --ll-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --ll-mono: "JetBrains Mono", "SFMono-Regular", monospace;
+}
+
+html[data-theme="light"],
+html[data-theme="dark"] {
+  --color-background-primary: var(--ll-bg);
+  --color-background-secondary: var(--ll-bg-elevated);
+  --color-foreground-primary: var(--ll-text);
+  --color-foreground-secondary: var(--ll-text-secondary);
+  --color-foreground-muted: var(--ll-text-muted);
+  --color-brand-primary: var(--ll-accent);
+  --color-brand-content: var(--ll-accent);
+  --color-api-background: var(--ll-bg-card);
+  --color-api-background-hover: var(--ll-bg-card-hover);
+  --color-api-overall: var(--ll-border);
+  --color-highlight-on-target: rgba(196, 168, 130, 0.12);
+}
+
+body {
+  background: var(--ll-bg);
+  color: var(--ll-text);
+  font-family: var(--ll-sans);
+  line-height: 1.75;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(var(--ll-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--ll-border) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.12;
+  z-index: -1;
+}
+
+h1,
+h2 {
+  font-family: var(--ll-serif);
+  font-weight: 400;
+  color: var(--ll-white);
+  letter-spacing: 0;
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--ll-sans);
+  font-weight: 500;
+  color: var(--ll-white);
+  letter-spacing: 0;
+}
+
+a {
+  color: var(--ll-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+
+a:hover {
+  color: var(--ll-accent-bright);
+}
+
+.sidebar-brand-text,
+.sidebar-tree .caption,
+.toc-title {
+  font-family: var(--ll-mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebar-container,
+.toc-drawer,
+.content {
+  background: transparent;
+}
+
+.sidebar-drawer,
+.toc-drawer {
+  background: var(--ll-bg-elevated);
+  border-color: var(--ll-border);
+}
+
+article,
+.content {
+  color: var(--ll-text-secondary);
+}
+
+article p,
+article li {
+  color: var(--ll-text-secondary);
+}
+
+article strong {
+  color: var(--ll-text);
+  font-weight: 500;
+}
+
+article code {
+  color: var(--ll-accent-bright);
+  background: var(--ll-bg-card);
+  border: 1px solid var(--ll-border);
+  border-radius: 0;
+  font-family: var(--ll-mono);
+}
+
+div[class*="highlight"],
+pre {
+  background: #080a0d !important;
+  border: 1px solid var(--ll-border);
+  border-radius: 0;
+}
+
+.highlight pre {
+  color: var(--ll-text);
+}
+
+table {
+  background: var(--ll-bg-card);
+  border: 1px solid var(--ll-border);
+  border-radius: 0;
+}
+
+th {
+  color: var(--ll-accent);
+  background: var(--ll-bg-elevated);
+  font-family: var(--ll-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+td,
+th {
+  border-color: var(--ll-border);
+}
+
+.admonition {
+  background: var(--ll-bg-card);
+  border: 1px solid var(--ll-border);
+  border-left: 3px solid var(--ll-accent-dim);
+  border-radius: 0;
+}
+
+.admonition-title {
+  background: transparent;
+  color: var(--ll-accent);
+  font-family: var(--ll-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.prev-next-area a {
+  background: var(--ll-bg-card);
+  border: 1px solid var(--ll-border);
+  border-radius: 0;
+}
+
+.prev-next-area a:hover {
+  border-color: var(--ll-accent-dim);
+}

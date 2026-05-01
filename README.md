@@ -189,14 +189,18 @@ document = parse_rtf(
 
 ## Documentation
 
-The `docs/` directory contains both the static GitHub Pages entry point and
-Sphinx source documentation:
+Published documentation is built with **Sphinx** using the [Furo](https://github.com/pradyunsg/furo) theme and a **Lumen & Lever** visual layer (`docs/_static/lumen.css`). Sources live under `docs/*.md` starting from `docs/index.md`.
 
-- `docs/index.html` is the standalone static documentation site for GitHub Pages.
-- `docs/index.md` starts the generated Sphinx documentation.
-- `docs/api.md` documents the public API.
-- `docs/cli.md`, `docs/integrations.md`, and `docs/performance.md` cover the
-  command line, adapter helpers, and performance guardrails.
+**GitHub Pages:** the site is produced by the **Deploy documentation** workflow (`.github/workflows/pages.yml`), which runs `sphinx-build` and publishes `docs/_build/html`. In the repository **Settings → Pages**, set the source to **GitHub Actions** (not “Deploy from branch `/docs`”).
+
+**Local build:**
+
+```bash
+python -m pip install -e ".[docs]"
+sphinx-build -E -b html docs docs/_build/html
+```
+
+Then open `docs/_build/html/index.html`. See also `docs/api.md`, `docs/cli.md`, `docs/integrations.md`, and `docs/performance.md`.
 
 ## Commercial context
 

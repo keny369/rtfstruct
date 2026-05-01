@@ -29,8 +29,26 @@ source_suffix = {
 }
 
 master_doc = "index"
-templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
+
+html_theme = "furo"
+html_title = "rtfstruct | Sourcetrace RTF Documentation"
+
+html_static_path = ["_static"]
+html_css_files = ["lumen.css"]
+
+html_theme_options = {
+    "light_css_variables": {
+        "color-brand-primary": "#c4a882",
+        "color-brand-content": "#c4a882",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#c4a882",
+        "color-brand-content": "#c4a882",
+    },
+}
+
+html_show_sphinx = False
 
 autodoc_typehints = "description"
 napoleon_google_docstring = True

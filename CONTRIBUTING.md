@@ -37,6 +37,7 @@ python -m pip wheel . --no-deps -w /tmp/rtfstruct-wheel
 
 Python modules, classes, and functions must keep Google-style docstrings.
 Markdown documentation should use the repository HTML license header.
-The static GitHub Pages entry point lives at `docs/index.html`; keep its
-Mermaid diagrams aligned with parser, AST, exporter, CLI, and integration
-behavior.
+
+Sphinx + Furo + `docs/_static/lumen.css` implement the **Lumen & Lever** documentation look. **GitHub Pages** should use the **Deploy documentation** workflow (`pages.yml`); set **Settings → Pages → Build: GitHub Actions**.
+
+The hand-authored `docs/index.html` landing page was retired in favor of the Sphinx build so the design does not drift from the main docs.

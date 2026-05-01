@@ -202,6 +202,24 @@ sphinx-build -E -b html docs docs/_build/html
 
 Then open `docs/_build/html/index.html`. See also `docs/api.md`, `docs/cli.md`, `docs/integrations.md`, and `docs/performance.md`.
 
+### Published site (GitHub Pages)
+
+The **Deploy documentation to GitHub Pages** workflow uploads the Sphinx `docs/_build/html` output. In the repository **Settings → Pages**, the **source must be GitHub Actions**, not *Deploy from a branch* `/docs`. If the source is `/docs`, GitHub runs **Jekyll** on Markdown; MyST directives such as a fenced `{toctree}` block are shown as plain code and the Lumen/Furo theme is not applied.
+
+Under **Pages**, ensure the **GitHub Actions** workflow selected for deployment is **Deploy documentation to GitHub Pages** (not another workflow).
+
+**First deploy:** If **Settings → Environments → `github-pages`** has required reviewers, open the **Actions** run and **approve** the deployment so the new site replaces the old one.
+
+**Sanity check (should mention Sphinx/Furo, not Jekyll):**
+
+```bash
+curl -sS "https://keny369.github.io/rtfstruct/" | head -20
+```
+
+If you see `jekyll` in the generator meta tag, Pages is still serving a branch/Jekyll build, not this workflow’s artifact.
+
+You can re-run the workflow manually: **Actions → Deploy documentation to GitHub Pages → Run workflow**.
+
 ## Commercial context
 
 `rtfstruct` is free open-source software.

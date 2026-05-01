@@ -75,6 +75,26 @@ roundtrips.
 
 ## Installation
 
+Install the latest `main` branch directly from GitHub (requires Python 3.11+):
+
+```bash
+python -m pip install "git+https://github.com/keny369/rtfstruct.git"
+```
+
+Pin a release tag (for example `v0.1.0`):
+
+```bash
+python -m pip install "git+https://github.com/keny369/rtfstruct.git@v0.1.0"
+```
+
+Or clone the repository and install from the checkout root:
+
+```bash
+git clone https://github.com/keny369/rtfstruct.git
+cd rtfstruct
+python -m pip install .
+```
+
 For local development:
 
 ```bash

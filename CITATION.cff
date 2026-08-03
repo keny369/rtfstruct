@@ -12,6 +12,7 @@ authors:
 year: 2026
 version: 0.1.1
 date-released: "2026-08-04"
+doi: 10.5281/zenodo.21781834
 license: Apache-2.0
 repository-code: "https://github.com/keny369/rtfstruct"
 url: "https://lumenandlever.com/sourcetrace"

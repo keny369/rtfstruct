@@ -7,7 +7,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "rtfstruct"
-version = "0.1.0"
+version = "0.1.1"
 description = "Read RTF as structure, not just text. Part of Sourcetrace by Lumen & Lever."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -40,11 +40,11 @@ classifiers = [
 
 [project.urls]
 Homepage = "https://lumenandlever.com"
-Documentation = "https://lumenandlever.com/tools/sourcetrace-rtf"
+Documentation = "https://lumenandlever.com/sourcetrace"
 Source = "https://github.com/keny369/rtfstruct"
 Issues = "https://github.com/keny369/rtfstruct/issues"
 "Lumen & Lever" = "https://lumenandlever.com"
-"Sourcetrace" = "https://lumenandlever.com/tools"
+"Sourcetrace" = "https://lumenandlever.com/sourcetrace"
 
 [project.scripts]
 rtfstruct = "rtfstruct.cli:main"

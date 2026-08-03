@@ -6,6 +6,14 @@ Copyright 2026 Lee Powell
 
 All notable changes to `rtfstruct` will be documented in this file.
 
+## 0.1.1 - 2026-08-04
+
+Citation and provenance release:
+
+- Completed citation metadata for software archiving and DOI registration.
+- Corrected documentation and Sourcetrace links to their current canonical URLs.
+- Kept the code surface unchanged from 0.1.0.
+
 ## 0.1.0 - 2026-05-01
 
 Initial pre-alpha library surface:

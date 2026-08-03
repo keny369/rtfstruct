@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT / "src"))
 project = "rtfstruct"
 copyright = "2026, Lee Powell"
 author = "Lee Powell"
-release = "0.1.0"
+release = "0.1.1"
 
 extensions = [
     "myst_parser",

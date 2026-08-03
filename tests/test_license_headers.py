@@ -72,7 +72,7 @@ def test_pyproject_has_toml_license_header_and_metadata() -> None:
     assert "Sourcetrace by Lumen & Lever" in text
     assert "maintainers" in text
     assert "lumen-and-lever" in text
-    assert 'Documentation = "https://lumenandlever.com/tools/sourcetrace-rtf"' in text
+    assert 'Documentation = "https://lumenandlever.com/sourcetrace"' in text
     assert 'Source = "https://github.com/keny369/rtfstruct"' in text
 
 

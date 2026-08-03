@@ -8,8 +8,17 @@ type: software
 authors:
   - family-names: Powell
     given-names: Lee
+    affiliation: "Lumen & Lever"
 year: 2026
+version: 0.1.1
+date-released: "2026-08-04"
 license: Apache-2.0
 repository-code: "https://github.com/keny369/rtfstruct"
-url: "https://lumenandlever.com/tools/sourcetrace-rtf"
+url: "https://lumenandlever.com/sourcetrace"
 abstract: "rtfstruct is a free open-source Python library for reading Rich Text Format as structure, not just text. It is part of Sourcetrace by Lumen & Lever."
+keywords:
+  - RTF
+  - document structure
+  - source traceability
+  - AI ingestion
+  - document intelligence

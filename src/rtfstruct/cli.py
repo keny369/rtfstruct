@@ -23,7 +23,7 @@ def cli_version() -> str:
 
         ver = version("rtfstruct")
     except Exception:
-        ver = "0.1.0"
+        ver = "0.1.1"
     return (
         f"rtfstruct {ver}\n"
         "Apache-2.0\n"
